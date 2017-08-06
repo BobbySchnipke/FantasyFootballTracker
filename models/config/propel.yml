@@ -1,0 +1,17 @@
+propel:
+    database:
+        connections:
+            fftracker_db:
+                adapter: mysql
+                dsn: mysql:host=localhost;port=3306;dbname=fftracker_db
+                user: root
+                password: 
+                settings:
+                    charset: utf8
+            fftracker_auth:
+                adapter: mysql
+                dsn: mysql:host=localhost;port=3306;dbname=fftracker_auth
+                user: root
+                password: 
+                settings:
+                    charset: utf8

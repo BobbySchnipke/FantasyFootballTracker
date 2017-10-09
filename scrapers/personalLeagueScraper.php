@@ -6,7 +6,7 @@ $scores = array();
 while($validTeam){
     $teamId++;
     if($teamId < 15){
-    $url = 'http://games.espn.com/ffl/schedule?leagueId=429859&teamId='.$teamId.'&seasonId=2016';
+    $url = 'http://games.espn.com/ffl/schedule?leagueId=429859&teamId='.$teamId.'&seasonId=2017';
     }
     else{
         exit();
@@ -27,6 +27,7 @@ while($validTeam){
     foreach($headers as $header){
         $tableHeaders[] = trim($header->textContent);
     }
+
     //print_r($tableHeaders);exit();
 
     $tableDetails = array();

@@ -48,6 +48,7 @@ CREATE TABLE `teams`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `league_id` INTEGER NOT NULL,
+    `team_league_id` INTEGER NOT NULL,
     `team_name` VARCHAR(255) NOT NULL,
     `team_owner` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`id`),

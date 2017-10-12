@@ -1,11 +1,14 @@
 <?php
+require dirname(__FILE__) . '/../../vendor/autoload.php';
 $serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
 $serviceContainer->checkVersion('2.0.0-dev');
 $serviceContainer->setAdapterClass('default', 'mysql');
+include dirname(__FILE__) . '/../../config/config.php';
 
-$config = \Config\Config::get('database');
+$config = \Config::getDataBase();
+
 $databases = array('fftracker_db', 'fftracker_auth');
-
+$config = $config['database'];
 function generateDsn($host, $port, $db) {
     $dsn = 'mysql:host=' . $host . ';' . 'port=' . $port . ';' . 'dbname=' . $db . ';';
     $dsn .= 'charset=UTF8';

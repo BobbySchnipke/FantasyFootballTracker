@@ -59,7 +59,7 @@ class TeamsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class TeamsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the id field
@@ -80,6 +80,11 @@ class TeamsTableMap extends TableMap
      * the column name for the league_id field
      */
     const COL_LEAGUE_ID = 'teams.league_id';
+
+    /**
+     * the column name for the team_league_id field
+     */
+    const COL_TEAM_LEAGUE_ID = 'teams.team_league_id';
 
     /**
      * the column name for the team_name field
@@ -103,11 +108,11 @@ class TeamsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'LeagueId', 'TeamName', 'TeamOwner', ),
-        self::TYPE_CAMELNAME     => array('id', 'leagueId', 'teamName', 'teamOwner', ),
-        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID, TeamsTableMap::COL_LEAGUE_ID, TeamsTableMap::COL_TEAM_NAME, TeamsTableMap::COL_TEAM_OWNER, ),
-        self::TYPE_FIELDNAME     => array('id', 'league_id', 'team_name', 'team_owner', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'LeagueId', 'TeamLeagueId', 'TeamName', 'TeamOwner', ),
+        self::TYPE_CAMELNAME     => array('id', 'leagueId', 'teamLeagueId', 'teamName', 'teamOwner', ),
+        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID, TeamsTableMap::COL_LEAGUE_ID, TeamsTableMap::COL_TEAM_LEAGUE_ID, TeamsTableMap::COL_TEAM_NAME, TeamsTableMap::COL_TEAM_OWNER, ),
+        self::TYPE_FIELDNAME     => array('id', 'league_id', 'team_league_id', 'team_name', 'team_owner', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -117,11 +122,11 @@ class TeamsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'LeagueId' => 1, 'TeamName' => 2, 'TeamOwner' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'leagueId' => 1, 'teamName' => 2, 'teamOwner' => 3, ),
-        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID => 0, TeamsTableMap::COL_LEAGUE_ID => 1, TeamsTableMap::COL_TEAM_NAME => 2, TeamsTableMap::COL_TEAM_OWNER => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'league_id' => 1, 'team_name' => 2, 'team_owner' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'LeagueId' => 1, 'TeamLeagueId' => 2, 'TeamName' => 3, 'TeamOwner' => 4, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'leagueId' => 1, 'teamLeagueId' => 2, 'teamName' => 3, 'teamOwner' => 4, ),
+        self::TYPE_COLNAME       => array(TeamsTableMap::COL_ID => 0, TeamsTableMap::COL_LEAGUE_ID => 1, TeamsTableMap::COL_TEAM_LEAGUE_ID => 2, TeamsTableMap::COL_TEAM_NAME => 3, TeamsTableMap::COL_TEAM_OWNER => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'league_id' => 1, 'team_league_id' => 2, 'team_name' => 3, 'team_owner' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -143,6 +148,7 @@ class TeamsTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('league_id', 'LeagueId', 'INTEGER', 'leagues', 'id', true, null, null);
+        $this->addColumn('team_league_id', 'TeamLeagueId', 'INTEGER', true, null, null);
         $this->addColumn('team_name', 'TeamName', 'VARCHAR', true, 255, null);
         $this->addColumn('team_owner', 'TeamOwner', 'VARCHAR', true, 255, null);
     } // initialize()
@@ -304,11 +310,13 @@ class TeamsTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(TeamsTableMap::COL_ID);
             $criteria->addSelectColumn(TeamsTableMap::COL_LEAGUE_ID);
+            $criteria->addSelectColumn(TeamsTableMap::COL_TEAM_LEAGUE_ID);
             $criteria->addSelectColumn(TeamsTableMap::COL_TEAM_NAME);
             $criteria->addSelectColumn(TeamsTableMap::COL_TEAM_OWNER);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.league_id');
+            $criteria->addSelectColumn($alias . '.team_league_id');
             $criteria->addSelectColumn($alias . '.team_name');
             $criteria->addSelectColumn($alias . '.team_owner');
         }

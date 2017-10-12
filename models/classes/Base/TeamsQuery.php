@@ -22,11 +22,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildTeamsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildTeamsQuery orderByLeagueId($order = Criteria::ASC) Order by the league_id column
+ * @method     ChildTeamsQuery orderByTeamLeagueId($order = Criteria::ASC) Order by the team_league_id column
  * @method     ChildTeamsQuery orderByTeamName($order = Criteria::ASC) Order by the team_name column
  * @method     ChildTeamsQuery orderByTeamOwner($order = Criteria::ASC) Order by the team_owner column
  *
  * @method     ChildTeamsQuery groupById() Group by the id column
  * @method     ChildTeamsQuery groupByLeagueId() Group by the league_id column
+ * @method     ChildTeamsQuery groupByTeamLeagueId() Group by the team_league_id column
  * @method     ChildTeamsQuery groupByTeamName() Group by the team_name column
  * @method     ChildTeamsQuery groupByTeamOwner() Group by the team_owner column
  *
@@ -55,6 +57,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildTeams findOneById(int $id) Return the first ChildTeams filtered by the id column
  * @method     ChildTeams findOneByLeagueId(int $league_id) Return the first ChildTeams filtered by the league_id column
+ * @method     ChildTeams findOneByTeamLeagueId(int $team_league_id) Return the first ChildTeams filtered by the team_league_id column
  * @method     ChildTeams findOneByTeamName(string $team_name) Return the first ChildTeams filtered by the team_name column
  * @method     ChildTeams findOneByTeamOwner(string $team_owner) Return the first ChildTeams filtered by the team_owner column *
 
@@ -63,12 +66,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildTeams requireOneById(int $id) Return the first ChildTeams filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeams requireOneByLeagueId(int $league_id) Return the first ChildTeams filtered by the league_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTeams requireOneByTeamLeagueId(int $team_league_id) Return the first ChildTeams filtered by the team_league_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeams requireOneByTeamName(string $team_name) Return the first ChildTeams filtered by the team_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeams requireOneByTeamOwner(string $team_owner) Return the first ChildTeams filtered by the team_owner column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildTeams[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildTeams objects based on current ModelCriteria
  * @method     ChildTeams[]|ObjectCollection findById(int $id) Return ChildTeams objects filtered by the id column
  * @method     ChildTeams[]|ObjectCollection findByLeagueId(int $league_id) Return ChildTeams objects filtered by the league_id column
+ * @method     ChildTeams[]|ObjectCollection findByTeamLeagueId(int $team_league_id) Return ChildTeams objects filtered by the team_league_id column
  * @method     ChildTeams[]|ObjectCollection findByTeamName(string $team_name) Return ChildTeams objects filtered by the team_name column
  * @method     ChildTeams[]|ObjectCollection findByTeamOwner(string $team_owner) Return ChildTeams objects filtered by the team_owner column
  * @method     ChildTeams[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -169,7 +174,7 @@ abstract class TeamsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, league_id, team_name, team_owner FROM teams WHERE id = :p0';
+        $sql = 'SELECT id, league_id, team_league_id, team_name, team_owner FROM teams WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -341,6 +346,47 @@ abstract class TeamsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(TeamsTableMap::COL_LEAGUE_ID, $leagueId, $comparison);
+    }
+
+    /**
+     * Filter the query on the team_league_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTeamLeagueId(1234); // WHERE team_league_id = 1234
+     * $query->filterByTeamLeagueId(array(12, 34)); // WHERE team_league_id IN (12, 34)
+     * $query->filterByTeamLeagueId(array('min' => 12)); // WHERE team_league_id > 12
+     * </code>
+     *
+     * @param     mixed $teamLeagueId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildTeamsQuery The current query, for fluid interface
+     */
+    public function filterByTeamLeagueId($teamLeagueId = null, $comparison = null)
+    {
+        if (is_array($teamLeagueId)) {
+            $useMinMax = false;
+            if (isset($teamLeagueId['min'])) {
+                $this->addUsingAlias(TeamsTableMap::COL_TEAM_LEAGUE_ID, $teamLeagueId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($teamLeagueId['max'])) {
+                $this->addUsingAlias(TeamsTableMap::COL_TEAM_LEAGUE_ID, $teamLeagueId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(TeamsTableMap::COL_TEAM_LEAGUE_ID, $teamLeagueId, $comparison);
     }
 
     /**

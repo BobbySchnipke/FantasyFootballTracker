@@ -76,6 +76,13 @@ abstract class Teams implements ActiveRecordInterface
     protected $league_id;
 
     /**
+     * The value for the team_league_id field.
+     *
+     * @var        int
+     */
+    protected $team_league_id;
+
+    /**
      * The value for the team_name field.
      *
      * @var        string
@@ -348,6 +355,16 @@ abstract class Teams implements ActiveRecordInterface
     }
 
     /**
+     * Get the [team_league_id] column value.
+     *
+     * @return int
+     */
+    public function getTeamLeagueId()
+    {
+        return $this->team_league_id;
+    }
+
+    /**
      * Get the [team_name] column value.
      *
      * @return string
@@ -410,6 +427,26 @@ abstract class Teams implements ActiveRecordInterface
 
         return $this;
     } // setLeagueId()
+
+    /**
+     * Set the value of [team_league_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\Teams The current object (for fluent API support)
+     */
+    public function setTeamLeagueId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->team_league_id !== $v) {
+            $this->team_league_id = $v;
+            $this->modifiedColumns[TeamsTableMap::COL_TEAM_LEAGUE_ID] = true;
+        }
+
+        return $this;
+    } // setTeamLeagueId()
 
     /**
      * Set the value of [team_name] column.
@@ -493,10 +530,13 @@ abstract class Teams implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TeamsTableMap::translateFieldName('LeagueId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->league_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TeamsTableMap::translateFieldName('TeamName', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TeamsTableMap::translateFieldName('TeamLeagueId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->team_league_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : TeamsTableMap::translateFieldName('TeamName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->team_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : TeamsTableMap::translateFieldName('TeamOwner', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : TeamsTableMap::translateFieldName('TeamOwner', TableMap::TYPE_PHPNAME, $indexType)];
             $this->team_owner = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -506,7 +546,7 @@ abstract class Teams implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = TeamsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = TeamsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Teams'), 0, $e);
@@ -729,6 +769,9 @@ abstract class Teams implements ActiveRecordInterface
         if ($this->isColumnModified(TeamsTableMap::COL_LEAGUE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'league_id';
         }
+        if ($this->isColumnModified(TeamsTableMap::COL_TEAM_LEAGUE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'team_league_id';
+        }
         if ($this->isColumnModified(TeamsTableMap::COL_TEAM_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'team_name';
         }
@@ -751,6 +794,9 @@ abstract class Teams implements ActiveRecordInterface
                         break;
                     case 'league_id':
                         $stmt->bindValue($identifier, $this->league_id, PDO::PARAM_INT);
+                        break;
+                    case 'team_league_id':
+                        $stmt->bindValue($identifier, $this->team_league_id, PDO::PARAM_INT);
                         break;
                     case 'team_name':
                         $stmt->bindValue($identifier, $this->team_name, PDO::PARAM_STR);
@@ -827,9 +873,12 @@ abstract class Teams implements ActiveRecordInterface
                 return $this->getLeagueId();
                 break;
             case 2:
-                return $this->getTeamName();
+                return $this->getTeamLeagueId();
                 break;
             case 3:
+                return $this->getTeamName();
+                break;
+            case 4:
                 return $this->getTeamOwner();
                 break;
             default:
@@ -864,8 +913,9 @@ abstract class Teams implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getLeagueId(),
-            $keys[2] => $this->getTeamName(),
-            $keys[3] => $this->getTeamOwner(),
+            $keys[2] => $this->getTeamLeagueId(),
+            $keys[3] => $this->getTeamName(),
+            $keys[4] => $this->getTeamOwner(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -929,9 +979,12 @@ abstract class Teams implements ActiveRecordInterface
                 $this->setLeagueId($value);
                 break;
             case 2:
-                $this->setTeamName($value);
+                $this->setTeamLeagueId($value);
                 break;
             case 3:
+                $this->setTeamName($value);
+                break;
+            case 4:
                 $this->setTeamOwner($value);
                 break;
         } // switch()
@@ -967,10 +1020,13 @@ abstract class Teams implements ActiveRecordInterface
             $this->setLeagueId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setTeamName($arr[$keys[2]]);
+            $this->setTeamLeagueId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setTeamOwner($arr[$keys[3]]);
+            $this->setTeamName($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setTeamOwner($arr[$keys[4]]);
         }
     }
 
@@ -1018,6 +1074,9 @@ abstract class Teams implements ActiveRecordInterface
         }
         if ($this->isColumnModified(TeamsTableMap::COL_LEAGUE_ID)) {
             $criteria->add(TeamsTableMap::COL_LEAGUE_ID, $this->league_id);
+        }
+        if ($this->isColumnModified(TeamsTableMap::COL_TEAM_LEAGUE_ID)) {
+            $criteria->add(TeamsTableMap::COL_TEAM_LEAGUE_ID, $this->team_league_id);
         }
         if ($this->isColumnModified(TeamsTableMap::COL_TEAM_NAME)) {
             $criteria->add(TeamsTableMap::COL_TEAM_NAME, $this->team_name);
@@ -1112,6 +1171,7 @@ abstract class Teams implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setLeagueId($this->getLeagueId());
+        $copyObj->setTeamLeagueId($this->getTeamLeagueId());
         $copyObj->setTeamName($this->getTeamName());
         $copyObj->setTeamOwner($this->getTeamOwner());
         if ($makeNew) {
@@ -1205,6 +1265,7 @@ abstract class Teams implements ActiveRecordInterface
         }
         $this->id = null;
         $this->league_id = null;
+        $this->team_league_id = null;
         $this->team_name = null;
         $this->team_owner = null;
         $this->alreadyInSave = false;

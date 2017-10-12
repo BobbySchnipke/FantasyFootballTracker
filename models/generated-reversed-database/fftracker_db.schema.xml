@@ -30,6 +30,7 @@
   <table name="teams" idMethod="native" phpName="Teams">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="league_id" phpName="LeagueId" type="INTEGER" required="true"/>
+    <column name="team_league_id" phpName="TeamLeagueId" type="INTEGER" required="true"/>
     <column name="team_name" phpName="TeamName" type="VARCHAR" size="255" required="true"/>
     <column name="team_owner" phpName="TeamOwner" type="VARCHAR" size="255" required="true"/>
     <foreign-key foreignTable="leagues" name="teams_ibfk_1">

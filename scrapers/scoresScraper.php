@@ -1,17 +1,11 @@
 <?php
-$stored = './tmp/scraperResult.txt';
-$validTeam = true;
-$teamId = 0;
-$scores = array();
-while($validTeam){
-    $teamId++;
-    if($teamId < 15){
+    $stored = './tmp/scoreScraperResult.txt';
+    $validTeam = true;
+    $teamId = 0;
+    $scores = array();
+
     $url = 'http://games.espn.com/ffl/schedule?leagueId=429859&teamId='.$teamId.'&seasonId=2017';
-    }
-    else{
-        exit();
-    }
-    print_r($teamId);
+
     $output = file_get_contents($url);
 
     $DOM = new DOMDocument();
@@ -34,18 +28,17 @@ while($validTeam){
     foreach($details as $detail){
         $tableDetails[] = trim($detail->textContent);
     }
-
     // remove the first element from the array
     array_splice($tableDetails, 0, 2);
-
     // each weekly score with values will have 6 elements
-    // keep checking 6 elements ahead until the value is no longer starts with "week"
+    // keep checking 6 elements ahead until the value is no longer contains a '-', which is
+    // only present when scores are in the sixth element
     $elementCount = 0;
     $validWeek = true;
     //print_r($tableDetails[$elementCount]);exit();
     $firstPass = true;
     while($validWeek){
-        $pos = strpos($tableDetails[$elementCount], 'Week');
+        $pos = strpos($tableDetails[$elementCount], '-');
         if(false !== $pos){
             $scores[$teamId][$tableDetails[$elementCount]][$tableHeaders[1]] = $tableDetails[$elementCount+1];
             $scores[$teamId][$tableDetails[$elementCount]][$tableHeaders[2]] = $tableDetails[$elementCount+2];
@@ -64,7 +57,6 @@ while($validTeam){
         }
 
     }
-}
 print_r($scores);
 
 $result = file_put_contents($stored, serialize($scores));

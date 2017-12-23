@@ -14,5 +14,12 @@ use Base\Teams as BaseTeams;
  */
 class Teams extends BaseTeams
 {
+    public function addTeamsToDb($leagueId){
+        try{
 
+            print_r('made it here');exit();
+        }catch(Exception $e){
+            throw $e;
+        }
+    }
 }

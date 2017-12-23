@@ -4,6 +4,9 @@
         "propel/propel": "~2.0@dev"
     },
     "autoload": { 
-        "classmap": ["models/classes/", "models/config/"] 
-   } 
+        "classmap": [
+            "models/classes/", 
+            "models/config/"] 
+   }
+
 }
